@@ -115,10 +115,16 @@ def build_mission_filter(mission_filter: Optional[str]) -> Optional[Dict]:
     """Translate a UI mission choice into a ChromaDB metadata `where` clause."""
     if not mission_filter:
         return None
-    value = mission_filter.strip().lower().replace(" ", "")
+    value = re.sub(r"[\s_\-]+", "", mission_filter.strip().lower())
     if value in ("", "all", "allmissions", "none", "any"):
         return None
-    return {"mission": value}
+    # embedding_pipeline.py stores Apollo missions as "apollo_11" / "apollo_13",
+    # while the UI and the evaluation dataset use "apollo11" / "apollo13".
+    # Match both spellings so the filter never silently returns nothing.
+    underscored = re.sub(r"([a-z])(\d)", r"\1_\2", value)
+    if underscored == value:
+        return {"mission": value}
+    return {"mission": {"$in": [value, underscored]}}
 
 
 def retrieve_documents(collection, query: str, n_results: int = 3,

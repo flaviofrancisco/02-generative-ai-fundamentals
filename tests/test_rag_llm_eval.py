@@ -54,8 +54,11 @@ def test_build_mission_filter():
     assert rag_client.build_mission_filter(None) is None
     assert rag_client.build_mission_filter("all") is None
     assert rag_client.build_mission_filter("All Missions") is None
-    assert rag_client.build_mission_filter("apollo13") == {"mission": "apollo13"}
-    assert rag_client.build_mission_filter("Apollo 11") == {"mission": "apollo11"}
+    # Both spellings are matched: the pipeline stores "apollo_13", the UI sends "apollo13"
+    assert rag_client.build_mission_filter("apollo13") == {"mission": {"$in": ["apollo13", "apollo_13"]}}
+    assert rag_client.build_mission_filter("Apollo 11") == {"mission": {"$in": ["apollo11", "apollo_11"]}}
+    assert rag_client.build_mission_filter("apollo_11") == {"mission": {"$in": ["apollo11", "apollo_11"]}}
+    assert rag_client.build_mission_filter("challenger") == {"mission": "challenger"}
 
 
 def test_unique_documents():
