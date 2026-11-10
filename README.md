@@ -1,0 +1,1 @@
+# 02-generative-ai-fundamentals
