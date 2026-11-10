@@ -6,3 +6,7 @@ langchain-community==0.4.2
 ragas==0.4.3
 pandas==2.3.3
 streamlit==1.56.0
+python-dotenv==1.2.4
+sacrebleu==2.6.0
+rouge-score==0.1.2
+pytest==9.2.0

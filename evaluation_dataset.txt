@@ -1,0 +1,58 @@
+# NASA Mission RAG - Evaluation Dataset
+#
+# Used by batch_evaluate.py (and as a manual test script for chat.py).
+# One record per block, blocks separated by a line containing only "---".
+# Fields: Category, Mission (apollo11 | apollo13 | challenger | all),
+#         Question, Expected (the answer the system is expected to give,
+#         used as the reference for BLEU / ROUGE).
+# Lines starting with "#" are comments.
+
+Category: overview
+Mission: apollo11
+Question: What was the goal of the Apollo 11 mission and who were the crew members?
+Expected: Apollo 11 was the first crewed mission to land on the Moon, launched on July 16, 1969. The crew were Commander Neil Armstrong, Command Module Pilot Michael Collins and Lunar Module Pilot Edwin "Buzz" Aldrin. Armstrong and Aldrin landed in the Lunar Module Eagle in the Sea of Tranquility on July 20, 1969 while Collins stayed in lunar orbit in the Command Module Columbia.
+---
+Category: timeline
+Mission: apollo11
+Question: What were Neil Armstrong's first words after the Lunar Module landed on the Moon?
+Expected: After touchdown Armstrong reported "Houston, Tranquility Base here. The Eagle has landed." Mission Control (CAPCOM Charlie Duke) replied that they copied him down and that there were "a bunch of guys about to turn blue" who were breathing again.
+---
+Category: technical
+Mission: apollo11
+Question: What program alarms did the Apollo 11 crew see during the lunar descent and what did they mean?
+Expected: During powered descent the crew reported 1202 and 1201 program alarms from the Lunar Module guidance computer. They were executive overflow alarms indicating the computer was overloaded and dropping low priority tasks. Mission Control told the crew they were "go" on those alarms and the descent continued.
+---
+Category: emergency
+Mission: apollo13
+Question: What happened to Apollo 13 and how did the crew report the problem to Houston?
+Expected: About 56 hours into the flight an oxygen tank in the Service Module exploded, causing loss of oxygen and electrical power in the Command Module. Jack Swigert and then Jim Lovell reported "Houston, we've had a problem" to Mission Control, describing a main B bus undervolt. The lunar landing was aborted and the crew used the Lunar Module Aquarius as a lifeboat.
+---
+Category: technical
+Mission: apollo13
+Question: How did the Apollo 13 crew deal with the rising carbon dioxide levels in the Lunar Module?
+Expected: The Lunar Module's lithium hydroxide canisters could not scrub CO2 for three crew members for the whole return trip, and the Command Module's square canisters did not fit the LM's round receptacles. Mission Control devised an adapter built from materials on board (plastic bags, cardboard from a flight plan cover, a hose from a suit and tape) and read the procedure up to the crew, who built it and brought CO2 levels down.
+---
+Category: crew
+Mission: apollo13
+Question: Who were the crew members of Apollo 13 and what were their roles?
+Expected: The Apollo 13 crew were Commander James (Jim) Lovell, Command Module Pilot John (Jack) Swigert and Lunar Module Pilot Fred Haise. Swigert replaced Ken Mattingly shortly before launch after Mattingly was exposed to German measles.
+---
+Category: disaster analysis
+Mission: challenger
+Question: What was the last communication from the Challenger crew before the vehicle broke apart?
+Expected: Pilot Michael Smith's last recorded words on the intercom were "Uh oh" at about 73 seconds after liftoff. Just before that, Commander Dick Scobee had acknowledged the "go at throttle up" call from Mission Control with "Roger, go at throttle up."
+---
+Category: disaster analysis
+Mission: challenger
+Question: What caused the Challenger (STS-51L) accident?
+Expected: The accident was caused by the failure of the O-ring seals in a joint of the right Solid Rocket Booster. Cold temperatures on launch morning made the O-rings stiff and they failed to seal, allowing hot gases to escape, which burned through the external tank attachment and led to structural breakup about 73 seconds after liftoff on January 28, 1986.
+---
+Category: crew
+Mission: challenger
+Question: Who were the seven crew members aboard Challenger on STS-51L?
+Expected: The STS-51L crew were Commander Francis "Dick" Scobee, Pilot Michael Smith, Mission Specialists Ellison Onizuka, Judith Resnik and Ronald McNair, and Payload Specialists Gregory Jarvis and Christa McAuliffe, the teacher in space.
+---
+Category: timeline
+Mission: all
+Question: On what dates did Apollo 11 and Apollo 13 launch, and how long did each mission last?
+Expected: Apollo 11 launched on July 16, 1969 and splashed down on July 24, 1969, lasting about 8 days. Apollo 13 launched on April 11, 1970 and splashed down on April 17, 1970, lasting just under 6 days because the lunar landing was aborted after the oxygen tank failure.

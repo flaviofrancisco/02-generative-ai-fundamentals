@@ -220,3 +220,10 @@ __marimo__/
 .streamlit/secrets.toml
 
 .idea/
+data/
+
+# RAG project artifacts
+chroma_db*/
+*.log
+results.csv
+results.json
