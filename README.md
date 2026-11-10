@@ -25,13 +25,14 @@ A complete Retrieval-Augmented Generation (RAG) system over NASA mission documen
 1. [Project structure](#project-structure)
 2. [Architecture](#architecture)
 3. [Setup](#setup)
-4. [Running the project end to end](#running-the-project-end-to-end)
-5. [Evaluation dataset and batch evaluation](#evaluation-dataset-and-batch-evaluation)
-6. [Evaluation results](#evaluation-results)
-7. [Automated tests](#automated-tests)
-8. [Rubric mapping](#rubric-mapping)
-9. [Design decisions](#design-decisions)
-10. [RAGAS 0.4.3 / LangChain compatibility](#ragas-043--langchain-compatibility)
+4. [Running with Docker](#running-with-docker)
+5. [Running the project end to end](#running-the-project-end-to-end)
+6. [Evaluation dataset and batch evaluation](#evaluation-dataset-and-batch-evaluation)
+7. [Evaluation results](#evaluation-results)
+8. [Automated tests](#automated-tests)
+9. [Rubric mapping](#rubric-mapping)
+10. [Design decisions](#design-decisions)
+11. [RAGAS 0.4.3 / LangChain compatibility](#ragas-043--langchain-compatibility)
 
 ---
 
@@ -53,6 +54,9 @@ A complete Retrieval-Augmented Generation (RAG) system over NASA mission documen
 ├── data_text/               # Raw NASA documents (apollo11/, apollo13/, challenger/)
 ├── chroma_db_openai/        # ChromaDB persist directory (created by the pipeline, git-ignored)
 ├── requirements.txt
+├── Dockerfile               # Container image (Python 3.12 + uv-installed requirements)
+├── docker-entrypoint.sh     # Builds the vector DB, then starts Streamlit
+├── docker-compose.yml       # One-command run: docker compose up -d
 ├── .env.example             # OPENAI_API_KEY template
 └── fix_ragas.png            # Screenshot of the RAGAS import fix
 ```
@@ -98,6 +102,47 @@ export OPENAI_API_KEY="sk-..."
 
 All scripts load `.env` automatically (`python-dotenv`). The Streamlit app also accepts the key
 in the sidebar.
+
+## Running with Docker
+
+The quickest way to run everything is Docker. The only prerequisite is an OpenAI API key.
+
+```bash
+cp .env.example .env            # put your OPENAI_API_KEY in .env
+docker compose up -d
+```
+
+Then open <http://localhost:8501>.
+
+On start the container:
+
+1. reads `OPENAI_API_KEY` from `.env` (it refuses to start without it);
+2. runs `embedding_pipeline.py` over `data_text/` with `--update-mode skip`, so documents that
+   are already embedded are not sent to OpenAI again;
+3. starts the Streamlit chat app on port 8501.
+
+The ChromaDB directory lives in the named volume `chroma_data`, so embeddings survive restarts
+and `docker compose down`. `data_text/` is bind-mounted read-only, so dropping new documents
+there and running `docker compose restart` embeds only the new files.
+
+Useful commands:
+
+```bash
+docker compose logs -f                  # watch the embedding progress / app logs
+docker compose restart                  # re-run the pipeline (picks up new documents)
+docker compose down -v                  # stop and delete the vector database
+docker compose exec nasa-rag-chat \
+    python batch_evaluate.py --openai-key "$OPENAI_API_KEY" --n-results 3   # batch evaluation inside the container
+```
+
+Behaviour can be tuned with environment variables in `.env` or `docker-compose.yml`:
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `CHUNK_SIZE` / `CHUNK_OVERLAP` | `1000` / `200` | Chunking strategy used when building the DB |
+| `UPDATE_MODE` | `skip` | `skip`, `update` or `replace` already-embedded documents |
+| `COLLECTION_NAME` | `nasa_space_missions_text` | ChromaDB collection name |
+| `SKIP_EMBEDDING` | `false` | `true` starts the UI without running the pipeline |
 
 ## Running the project end to end
 

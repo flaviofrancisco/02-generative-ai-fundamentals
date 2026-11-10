@@ -1,0 +1,15 @@
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.benchmarks
+.vscode
+.idea
+.env
+chroma_db*/
+*.log
+results.csv
+results.json
+fix_ragas.png
+tests/

@@ -1,0 +1,27 @@
+services:
+  nasa-rag-chat:
+    build: .
+    image: nasa-rag-chat:latest
+    container_name: nasa-rag-chat
+    env_file:
+      - .env
+    environment:
+      # Override any of these in .env if you want different defaults.
+      CHROMA_DIR: ./chroma_db_openai
+      COLLECTION_NAME: nasa_space_missions_text
+      DATA_PATH: ./data_text
+      CHUNK_SIZE: "1000"
+      CHUNK_OVERLAP: "200"
+      UPDATE_MODE: skip          # skip | update | replace
+      SKIP_EMBEDDING: "false"    # set to "true" to start the UI without touching the DB
+    ports:
+      - "8501:8501"
+    volumes:
+      # Persist the vector database between restarts so embeddings are only paid for once.
+      - chroma_data:/app/chroma_db_openai
+      # Mount the corpus so new documents are picked up on the next restart without a rebuild.
+      - ./data_text:/app/data_text:ro
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
